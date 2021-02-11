@@ -11,12 +11,31 @@ class LinearStagesBar extends LeafRenderObjectWidget {
   //   return version;
   // }
 
+  LinearStagesBar(
+      {required this.presentColor,
+      required this.pastColor,
+      required this.staleColor});
+
+  Color presentColor;
+  Color pastColor;
+  Color staleColor;
+
   @override
   _RenderLinearStagesBar createRenderObject(BuildContext context) {
-    return _RenderLinearStagesBar();
+    return _RenderLinearStagesBar(
+        presentColor: presentColor,
+        pastColor: pastColor,
+        staleColor: staleColor);
   }
 }
 
 class _RenderLinearStagesBar extends RenderBox {
+  _RenderLinearStagesBar(
+      {required this.presentColor,
+      required this.pastColor,
+      required this.staleColor});
 
+  Color presentColor;
+  Color pastColor;
+  Color staleColor;
 }

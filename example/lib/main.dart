@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 //import 'dart:async';
 //import 'package:flutter/services.dart';
 import 'package:linear_stages_bar/linear_stages_bar.dart';
@@ -49,7 +50,11 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: LinearStagesBar(
+            presentColor: Colors.cyan,
+            pastColor: Colors.redAccent,
+            staleColor: Colors.blueGrey,
+          ),
         ),
       ),
     );
