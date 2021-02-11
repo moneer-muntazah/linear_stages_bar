@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
             presentColor: Colors.cyan,
             pastColor: Colors.redAccent,
             staleColor: Colors.blueGrey,
+            thumbsSize: 20
           ),
         ),
       ),

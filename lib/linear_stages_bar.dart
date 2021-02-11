@@ -1,6 +1,7 @@
 //import 'dart:async';
 //import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 class LinearStagesBar extends LeafRenderObjectWidget {
   // static const MethodChannel _channel =
@@ -14,28 +15,36 @@ class LinearStagesBar extends LeafRenderObjectWidget {
   LinearStagesBar(
       {required this.presentColor,
       required this.pastColor,
-      required this.staleColor});
+      required this.staleColor,
+      required this.thumbsSize});
 
-  Color presentColor;
-  Color pastColor;
-  Color staleColor;
+  final Color presentColor;
+  final Color pastColor;
+  final Color staleColor;
+  final double thumbsSize;
 
   @override
   _RenderLinearStagesBar createRenderObject(BuildContext context) {
-    return _RenderLinearStagesBar(
-        presentColor: presentColor,
-        pastColor: pastColor,
-        staleColor: staleColor);
+    return _RenderLinearStagesBar();
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, _RenderLinearStagesBar bar) {}
+
+  @override
+  debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
   }
 }
 
 class _RenderLinearStagesBar extends RenderBox {
-  _RenderLinearStagesBar(
-      {required this.presentColor,
-      required this.pastColor,
-      required this.staleColor});
+  static double _tempHardCodedDesiredHeight = 40;
 
-  Color presentColor;
-  Color pastColor;
-  Color staleColor;
+  _RenderLinearStagesBar();
+
+  @override
+  void performLayout() {
+    size = constraints
+        .constrain(Size(constraints.maxWidth, _tempHardCodedDesiredHeight));
+  }
 }
