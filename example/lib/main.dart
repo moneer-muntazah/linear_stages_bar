@@ -50,11 +50,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: LinearStagesBar(
-            presentColor: Colors.cyan,
-            pastColor: Colors.redAccent,
-            staleColor: Colors.blueGrey,
-            thumbsSize: 20
+          child: Container(
+            // color: Colors.lightGreen,
+            child: LinearStagesBar(
+              presentColor: Colors.cyan,
+              pastColor: Colors.redAccent,
+              futureColor: Colors.blueGrey,
+            ),
           ),
         ),
       ),
