@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'dependencies.dart';
 
-enum StageStatus { past, present, future }
-
-/// A PDS
-@immutable
-class Stage {
-  final String text;
-  final StageStatus status;
-
-  const Stage({@required this.text, this.status = StageStatus.future})
-      : assert(text != null && status != null);
-}
-
-class LinearStagesBar extends LeafRenderObjectWidget {
-  LinearStagesBar(
+class LinearStagesBar_Leaf extends LeafRenderObjectWidget {
+  LinearStagesBar_Leaf(
       {this.presentColor,
       this.pastColor,
       this.futureColor,
@@ -42,7 +31,8 @@ class LinearStagesBar extends LeafRenderObjectWidget {
         thumbsRadius: thumbsRadius ?? 40.0,
         lastStageIsCancel: lastStageIsCancel ?? false,
         stages: stages ?? <Stage>[],
-        textDirection: textDirection ?? Directionality.of(context));
+        textDirection: textDirection ?? Directionality.of(context),
+        buildContext: context);
   }
 
   @override
@@ -63,6 +53,7 @@ class _RenderLinearStagesBar extends RenderBox {
       @required Color futureColor,
       @required double thumbsRadius,
       @required List<Stage> stages,
+      @required this.buildContext,
       @required this.textDirection,
       @required this.lastStageIsCancel})
       : _presentColor = presentColor,
@@ -75,6 +66,11 @@ class _RenderLinearStagesBar extends RenderBox {
   void performLayout() {
     size = constraints.constrain(Size(constraints.maxWidth, _thumbsRadius));
   }
+
+  BuildContext buildContext;
+  TextDirection textDirection;
+  double _thumbsRadius;
+  bool lastStageIsCancel;
 
   Color get presentColor => _presentColor;
   Color _presentColor;
@@ -112,10 +108,6 @@ class _RenderLinearStagesBar extends RenderBox {
     markNeedsPaint();
   }
 
-  TextDirection textDirection;
-  double _thumbsRadius;
-  bool lastStageIsCancel;
-
   @override
   double computeMinIntrinsicWidth(double height) => _hardCodedDesiredWidth;
 
@@ -141,6 +133,10 @@ class _RenderLinearStagesBar extends RenderBox {
     final noSkipping =
         lastStageIsCancel ? stages.last?.status != StageStatus.past : true;
 
+    final radius =
+        (size.width) / ((stages.length < 5 ? 5 : stages.length) - 1) * 0.15;
+    final distance = (size.width - 2 * radius) / (stages.length - 1);
+
     final presentPaint = Paint()
           ..color = presentColor
           ..style = PaintingStyle.stroke
@@ -152,9 +148,71 @@ class _RenderLinearStagesBar extends RenderBox {
         futurePaint = Paint()
           ..color = futureColor
           ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0,
+        fillPaint = Paint()
+          ..color = pastColor
+          ..style = PaintingStyle.fill
           ..strokeWidth = 2.0;
 
-    canvas.drawLine(Offset(0, 0), Offset(40.0, 0), presentPaint);
+    Paint pickPaint(int i) {
+      if (stages[i].status == StageStatus.past) return fillPaint;
+      if (stages[i].status == StageStatus.present) return presentPaint;
+      if (stages[i].status == StageStatus.future && noSkipping) {
+        return futurePaint;
+      }
+      return pastPaint;
+    }
+
+    for (var i = 0; i < stages.length; i += 1) {
+      final leftPoint = distance * i;
+
+      canvas.drawCircle(Offset(radius + leftPoint, dy), radius, pickPaint(i));
+
+      if (stages[i].status == StageStatus.past) {
+        final icon =
+            lastStageIsCancel && (isRtl ? i == 0 : i == stages.length - 1)
+                ? Icons.close
+                : Icons.done;
+        final iconFontSize = radius * 1.6;
+        TextPainter(
+            text: TextSpan(
+                text: String.fromCharCode(icon.codePoint),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: icon.fontFamily,
+                    fontSize: iconFontSize)),
+            textAlign: TextAlign.left,
+            textDirection: textDirection)
+          ..layout()
+          ..paint(
+              canvas,
+              Offset(
+                  leftPoint + radius - (iconFontSize / 2), dy - radius * 0.9));
+      }
+
+      final next = i + 1.0;
+      if (next < stages.length) {
+        canvas.drawLine(
+            Offset(radius * 2 + leftPoint, dy),
+            Offset(distance * next, dy),
+            isRtl ? pickPaint(i) : pickPaint(next.toInt()));
+      }
+
+      TextPainter(
+          text: TextSpan(
+              text: stages[i].text,
+              style: DefaultTextStyle.of(buildContext).style.copyWith(
+                  color: stages[i].status == StageStatus.future && noSkipping
+                      ? futureColor
+                      : presentColor,
+                  fontSize: radius)),
+          textAlign: TextAlign.center,
+          textDirection: textDirection)
+        ..layout(minWidth: distance, maxWidth: distance)
+        ..paint(canvas, Offset(leftPoint + radius - (distance / 2), dy + 20.0));
+    }
+
+    // canvas.drawLine(Offset(0, 0), Offset(40.0, 0), presentPaint);
 
     // canvas.restore();
   }

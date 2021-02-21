@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:linear_stages_bar/linear_stages_bar.dart';
+import 'package:linear_stages_bar/index.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
             // color: Colors.lightGreen,
             child: Container(
               color: Colors.pink[50],
-              child: LinearStagesBar(
+              child: LinearStagesBar_Leaf(
                 presentColor: Colors.cyan,
                 pastColor: Colors.redAccent,
                 futureColor: Colors.blueGrey,
