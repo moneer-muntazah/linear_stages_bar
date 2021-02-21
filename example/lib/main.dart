@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-//import 'dart:async';
-//import 'package:flutter/services.dart';
 import 'package:linear_stages_bar/linear_stages_bar.dart';
 
 void main() {
@@ -14,33 +11,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
 
   @override
   void initState() {
     super.initState();
-    //initPlatformState();
   }
-
-  // // Platform messages are asynchronous, so we initialize in an async method.
-  // Future<void> initPlatformState() async {
-  //   String platformVersion;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     platformVersion = await LinearStagesBar.platformVersion;
-  //   } on PlatformException {
-  //     platformVersion = 'Failed to get platform version.';
-  //   }
-  //
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-  //
-  //   setState(() {
-  //     _platformVersion = platformVersion;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +27,28 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Container(
             // color: Colors.lightGreen,
-            child: LinearStagesBar(
-              presentColor: Colors.cyan,
-              pastColor: Colors.redAccent,
-              futureColor: Colors.blueGrey,
+            child: Container(
+              color: Colors.pink[50],
+              child: LinearStagesBar(
+                presentColor: Colors.cyan,
+                pastColor: Colors.redAccent,
+                futureColor: Colors.blueGrey,
+                stages: <Stage>[
+                  const Stage(
+                    text: "one",
+                    status: StageStatus.past
+                  ),
+                  const Stage(
+                      text: "two",
+                      status: StageStatus.present
+                  ),
+                  const Stage(
+                      text: "three",
+                      status: StageStatus.future
+                  )
+                ],
+                lastStageIsCancel: true,
+              ),
             ),
           ),
         ),
