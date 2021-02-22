@@ -36,7 +36,17 @@ class LinearStagesBar_Leaf extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, _RenderLinearStagesBar bar) {}
+  void updateRenderObject(BuildContext context, _RenderLinearStagesBar bar) {
+    // bar
+    //   ..presentColor = presentColor
+    //   ..pastColor = pastColor
+    //   ..futureColor = futureColor
+    //   ..thumbsRadius = thumbsRadius
+    //   ..lastStageIsCancel = lastStageIsCancel
+    //   ..stages = stages
+    //   ..textDirection = textDirection
+    //   ..buildContext = context;
+  }
 
   @override
   debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -69,8 +79,16 @@ class _RenderLinearStagesBar extends RenderBox {
 
   BuildContext buildContext;
   TextDirection textDirection;
-  double _thumbsRadius;
   bool lastStageIsCancel;
+
+  double get thumbsRadius => _thumbsRadius;
+  double _thumbsRadius;
+
+  set thumbsRadius(double radius) {
+    if (_thumbsRadius == radius) return;
+    _thumbsRadius = radius;
+    markNeedsLayout();
+  }
 
   Color get presentColor => _presentColor;
   Color _presentColor;
@@ -81,7 +99,7 @@ class _RenderLinearStagesBar extends RenderBox {
     markNeedsPaint();
   }
 
-  Color get pastColor => _presentColor;
+  Color get pastColor => _pastColor;
   Color _pastColor;
 
   set pastColor(Color color) {
@@ -90,7 +108,7 @@ class _RenderLinearStagesBar extends RenderBox {
     markNeedsPaint();
   }
 
-  Color get futureColor => _presentColor;
+  Color get futureColor => _futureColor;
   Color _futureColor;
 
   set futureColor(Color color) {
@@ -122,6 +140,9 @@ class _RenderLinearStagesBar extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    print(presentColor);
+    print(pastColor);
+    print(futureColor);
     final canvas = context.canvas;
     // canvas.save();
     // canvas.translate(offset.dx, offset.dy);
